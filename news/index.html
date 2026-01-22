@@ -985,28 +985,41 @@
     // 按月份分組的報告
     let groupedByMonth = {};
 
-    // 嘗試探測存在的報告（從最近日期往前檢查）
+    // 從索引檔載入報告列表
     async function detectReports() {
+      try {
+        const response = await fetch('reports.json');
+        if (!response.ok) {
+          console.warn('無法載入 reports.json，回退到輪詢模式');
+          return await detectReportsFallback();
+        }
+        const data = await response.json();
+        return data.reports.map(date => ({
+          filename: `${date}-news-report`,
+          date: date
+        }));
+      } catch (e) {
+        console.warn('載入報告索引失敗，回退到輪詢模式', e);
+        return await detectReportsFallback();
+      }
+    }
+
+    // 備援：輪詢檢查報告（僅在 reports.json 不存在時使用）
+    async function detectReportsFallback() {
       const today = new Date();
       const reports = [];
-
-      // 檢查最近 30 天的報告
-      for (let i = 0; i < 30; i++) {
+      for (let i = 0; i < 7; i++) {  // 減少到 7 天
         const date = new Date(today);
         date.setDate(date.getDate() - i);
         const dateStr = date.toISOString().split('T')[0];
         const filename = `${dateStr}-news-report`;
-
         try {
           const response = await fetch(`${filename}.md`, { method: 'HEAD' });
           if (response.ok) {
             reports.push({ filename, date: dateStr });
           }
-        } catch (e) {
-          // 忽略錯誤
-        }
+        } catch (e) {}
       }
-
       return reports;
     }
 
