@@ -250,3 +250,54 @@ Description paragraph...
 |------|------|------|------|
 | [Title](url) | Source | Time | - |
 ```
+
+---
+
+## UI/UX Refactor (2026-01-25)
+
+Applied UI/UX Pro Max design principles to improve reading experience.
+
+### Design System Variables
+
+```css
+/* Color Palette - Zinc-based for reading comfort */
+--text: #18181B (light) / #FAFAFA (dark)
+--text-secondary: #3F3F46 / #D4D4D8
+--text-muted: #71717A / #A1A1AA
+--background: #FAFAFA / #09090B
+--surface: #FFFFFF / #18181B
+--primary: #2563EB
+--primary-light: #DBEAFE / #1E3A5F
+
+/* Typography Scale */
+--font-xs: 0.75rem    --font-2xl: 1.5rem
+--font-sm: 0.875rem   --font-3xl: 1.875rem
+--font-base: 1rem     line-height: 1.75
+--font-lg: 1.125rem   letter-spacing: -0.011em
+--font-xl: 1.25rem    max-width: 65ch (optimal)
+
+/* Spacing Scale */
+--space-1: 0.25rem    --space-6: 1.5rem
+--space-2: 0.5rem     --space-8: 2rem
+--space-3: 0.75rem    --space-12: 3rem
+--space-4: 1rem
+```
+
+### Key Improvements
+
+| Area | Before | After |
+|------|--------|-------|
+| Line height | 1.7 | 1.75 |
+| Line width | 800px | 65ch (720px) |
+| Color contrast | 4.5:1 | 7:1+ |
+| Header | Static | Backdrop blur + scroll shadow |
+| Tables | Basic | Rounded, hover states, sticky headers |
+| Focus states | None | 3px ring with primary-light |
+| Links | Underline on hover | underline-offset: 3px |
+
+### Accessibility (WCAG 2.1 AA)
+
+- Focus rings on all interactive elements
+- Sufficient color contrast in both modes
+- `prefers-reduced-motion` respected
+- Keyboard navigation support
