@@ -16,11 +16,14 @@ blog/
 │   ├── reports.json        # 報告索引
 │   └── YYYY-MM-DD-news-report.md
 ├── reports/                # Raw News Scanner（即時掃描）
-│   ├── codex-plan.md       # 實作計畫文件
+│   ├── index.html          # 報告檢視器（含 TTS）
+│   ├── reports.json        # 報告索引（自動產生）
 │   └── raw/
-│       ├── index.html      # 原始報告檢視器（含 TTS）
-│       ├── reports.json    # 報告索引
 │       └── global_scan_YYYYMMDD_HHMM.md
+├── scripts/
+│   └── update-reports.sh   # 自動更新 reports.json
+├── .github/workflows/
+│   └── update-reports.yml  # 推送時自動執行更新
 └── codex-plan/             # 多語系技術文章
     ├── index.html          # 中文版
     ├── en/index.html       # 英文版
@@ -33,7 +36,7 @@ blog/
 
 - **Markdown 渲染**：marked.js CDN
 - **TTS 引擎**：Azure、Google Cloud、Gemini、Fish Audio、Web Speech API
-- **報告索引**：`reports.json` 需手動或腳本更新
+- **報告索引**：`reports.json` 由 GitHub Actions 自動更新
 - **Cache-busting**：`?v=${timestamp}` 防止瀏覽器快取
 
 ### TTS 內容提取邏輯 (reports/raw/)
@@ -47,8 +50,9 @@ blog/
 ### 新增報告步驟
 
 1. 將 `.md` 檔案放入對應目錄
-2. 更新 `reports.json` 加入新檔名（不含 `.md`）
-3. 提交並推送
+2. 提交並推送（`reports.json` 由 GitHub Actions 自動更新）
+
+手動更新：`bash scripts/update-reports.sh`
 
 ## 檔名格式
 
