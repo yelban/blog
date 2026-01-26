@@ -37,3 +37,7 @@ npm-debug.log*
 *.tmp
 *.temp
 .cache/
+
+# Claude Code
+.claude/skills/
+codex-plan.md
