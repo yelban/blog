@@ -1,5 +1,9 @@
 {
   "reports": [
+<<<<<<< HEAD
+=======
+    "global_scan_20260127_0740",
+>>>>>>> f62bb20 (feat(reports): add scan 20260127_0740)
     "global_scan_20260126_2215",
     "global_scan_20260126_2200",
     "global_scan_20260126_2147",
