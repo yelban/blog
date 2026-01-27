@@ -69,8 +69,26 @@
       --transition-slow: 300ms ease;
     }
 
+    /* Dark Mode - 手動切換或系統偏好 */
+    [data-theme="dark"] {
+      --background: #09090B;
+      --surface: #18181B;
+      --surface-elevated: #27272A;
+      --text: #FAFAFA;
+      --text-secondary: #D4D4D8;
+      --text-muted: #A1A1AA;
+      --border: #3F3F46;
+      --border-light: #27272A;
+      --code-bg: #27272A;
+      --primary-light: #1E3A5F;
+
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+    }
+
     @media (prefers-color-scheme: dark) {
-      :root {
+      :root:not([data-theme="light"]) {
         --background: #09090B;
         --surface: #18181B;
         --surface-elevated: #27272A;
@@ -135,10 +153,77 @@
       transition: box-shadow var(--transition-base);
     }
 
+    [data-theme="dark"] header {
+      background: rgba(24, 24, 27, 0.85);
+    }
+
     @media (prefers-color-scheme: dark) {
-      header {
+      :root:not([data-theme="light"]) header {
         background: rgba(24, 24, 27, 0.85);
       }
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .theme-toggle:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+
+    .theme-toggle svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .theme-toggle .icon-sun,
+    .theme-toggle .icon-moon {
+      display: none;
+    }
+
+    /* Light mode: show moon icon (to switch to dark) */
+    :root:not([data-theme="dark"]) .theme-toggle .icon-moon {
+      display: block;
+    }
+
+    [data-theme="dark"] .theme-toggle .icon-sun {
+      display: block;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .theme-toggle .icon-sun {
+        display: block;
+      }
+      :root:not([data-theme="light"]) .theme-toggle .icon-moon {
+        display: none;
+      }
+    }
+
+    [data-theme="light"] .theme-toggle .icon-moon {
+      display: block;
+    }
+
+    [data-theme="light"] .theme-toggle .icon-sun {
+      display: none;
     }
 
     header.scrolled {
@@ -1102,6 +1187,14 @@
         <select id="time-select" aria-label="選擇時間"></select>
         <button id="next-btn" class="nav-btn" aria-label="下一篇" disabled>→</button>
       </div>
+      <button id="theme-toggle" class="theme-toggle" aria-label="切換深色/亮色模式">
+        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
+        </svg>
+        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+        </svg>
+      </button>
       <div class="tts-controls">
         <button id="play-all-btn" class="tts-btn tts-btn-primary" aria-label="全部播放">
           <svg id="play-all-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
@@ -1250,6 +1343,42 @@
   </div>
 
   <script>
+    // ========== 主題切換邏輯 ==========
+    (function() {
+      const themeToggle = document.getElementById('theme-toggle');
+      const root = document.documentElement;
+
+      // 從 localStorage 讀取或偵測系統偏好
+      function getPreferredTheme() {
+        const stored = localStorage.getItem('theme');
+        if (stored) return stored;
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+
+      // 套用主題
+      function applyTheme(theme) {
+        root.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+      }
+
+      // 初始化
+      applyTheme(getPreferredTheme());
+
+      // 切換
+      themeToggle.addEventListener('click', () => {
+        const current = root.getAttribute('data-theme') || getPreferredTheme();
+        const next = current === 'dark' ? 'light' : 'dark';
+        applyTheme(next);
+      });
+
+      // 監聽系統偏好變化（如果沒有手動設定）
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('theme')) {
+          applyTheme(e.matches ? 'dark' : 'light');
+        }
+      });
+    })();
+
     // ========== 檔案偵測與選擇邏輯 ==========
 
     const main = document.getElementById('main');
