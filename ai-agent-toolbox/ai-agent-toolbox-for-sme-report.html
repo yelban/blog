@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 魔法工具箱 — 面向中小企業的 Agent Skills 產品化報告</title>
+    <meta name="description" content="以 Agent Skills 為核心的產品化與盈利研究報告，幫助中小企業主了解如何用 AI 省時間、降風險">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            font-size: 18px;
+            line-height: 1.8;
+        }
+
+        /* 自定義動畫 */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+
+        /* 滾動動畫 - 初始隱藏 */
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .scroll-animate.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 玻璃態效果 */
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /* 漸層文字 */
+        .gradient-text {
+            background: linear-gradient(135deg, #F97316 0%, #E07A5F 50%, #7AA874 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* 卡片懸停效果 */
+        .card-hover {
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 20px 40px -12px rgba(249, 115, 22, 0.2);
+        }
+
+        /* 表格樣式 */
+        .styled-table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+
+        .styled-table th,
+        .styled-table td {
+            padding: 14px 18px;
+            text-align: left;
+        }
+
+        .styled-table thead th {
+            background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .styled-table thead th:first-child {
+            border-radius: 12px 0 0 0;
+        }
+
+        .styled-table thead th:last-child {
+            border-radius: 0 12px 0 0;
+        }
+
+        .styled-table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .styled-table tbody tr:nth-child(even) {
+            background: rgba(249, 115, 22, 0.03);
+        }
+
+        .styled-table tbody tr:hover {
+            background: rgba(249, 115, 22, 0.08);
+        }
+
+        .styled-table tbody tr:last-child td:first-child {
+            border-radius: 0 0 0 12px;
+        }
+
+        .styled-table tbody tr:last-child td:last-child {
+            border-radius: 0 0 12px 0;
+        }
+
+        /* 時間軸 */
+        .timeline-line {
+            background: linear-gradient(180deg, #F97316 0%, #7AA874 50%, #E07A5F 100%);
+        }
+
+        /* 側邊導航高亮 */
+        .nav-link {
+            transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            color: #F97316;
+            border-left-color: #FED7AA;
+        }
+
+        .nav-link:focus-visible {
+            outline: 2px solid #F97316;
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        .nav-link.active {
+            color: #F97316;
+            font-weight: 500;
+            border-left-color: #F97316;
+            background: rgba(249, 115, 22, 0.05);
+        }
+
+        /* 平滑滾動 */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* 定價卡片高亮 */
+        .pricing-highlight {
+            transform: scale(1.02);
+            border: 2px solid #F97316;
+            box-shadow: 0 20px 40px -12px rgba(249, 115, 22, 0.25);
+        }
+
+        /* ROI 對比條 */
+        .progress-bar {
+            transition: width 1s ease-out;
+        }
+
+        /* 引言區塊 */
+        .quote-block {
+            border-left: 4px solid #F97316;
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.05) 0%, rgba(122, 168, 116, 0.05) 100%);
+        }
+
+        /* 響應式：手機版隱藏側邊欄 */
+        @media (max-width: 1023px) {
+            .sidebar-nav {
+                display: none;
+            }
+        }
+
+        /* 尊重使用者動畫偏好 */
+        @media (prefers-reduced-motion: reduce) {
+            .animate-fade-in-up,
+            .animate-float,
+            .scroll-animate {
+                animation: none;
+                transition: none;
+                opacity: 1;
+                transform: none;
+            }
+            .card-hover:hover {
+                transform: none;
+            }
+            .progress-bar {
+                transition: none;
+            }
+        }
+
+        /* 數字等寬對齊 */
+        .tabular-nums {
+            font-variant-numeric: tabular-nums;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#F97316',
+                        secondary: '#7AA874',
+                        accent: '#E07A5F',
+                        background: '#FFFBF5',
+                        'text-main': '#422006',
+                        'text-muted': '#78716C',
+                        'border-soft': '#FED7AA',
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans TC', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-text-main antialiased">
+
+    <!-- ==================== HERO SECTION ==================== -->
+    <header class="relative overflow-hidden">
+        <!-- Hero Image -->
+        <div class="w-full">
+            <img
+                src="cover.png"
+                alt="AI 魔法工具箱 — 面向中小企業的 Agent Skills"
+                class="w-full h-auto object-cover animate-fade-in-up"
+                width="1792"
+                height="1024"
+                fetchpriority="high"
+            >
+        </div>
+
+        <!-- 統計卡片 Overlay -->
+        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-orange-950/90 via-orange-950/60 to-transparent py-8 md:py-12">
+            <div class="max-w-6xl mx-auto px-4 md:px-6">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
+                    <!-- 統計卡片 1 -->
+                    <div class="glass rounded-xl p-4 md:p-6 text-center card-hover animate-fade-in-up delay-100">
+                        <div class="text-2xl md:text-4xl font-bold text-primary tabular-nums">60+</div>
+                        <div class="text-sm md:text-base text-text-muted mt-1">小時/月可省</div>
+                    </div>
+                    <!-- 統計卡片 2 -->
+                    <div class="glass rounded-xl p-4 md:p-6 text-center card-hover animate-fade-in-up delay-200">
+                        <div class="text-2xl md:text-4xl font-bold text-secondary tabular-nums">8K</div>
+                        <div class="text-sm md:text-base text-text-muted mt-1">起/月費</div>
+                    </div>
+                    <!-- 統計卡片 3 -->
+                    <div class="glass rounded-xl p-4 md:p-6 text-center card-hover animate-fade-in-up delay-300">
+                        <div class="text-2xl md:text-4xl font-bold text-accent tabular-nums">90</div>
+                        <div class="text-sm md:text-base text-text-muted mt-1">天行動計畫</div>
+                    </div>
+                    <!-- 統計卡片 4 -->
+                    <div class="glass rounded-xl p-4 md:p-6 text-center card-hover animate-fade-in-up delay-400">
+                        <div class="text-2xl md:text-4xl font-bold text-primary tabular-nums">1</div>
+                        <div class="text-sm md:text-base text-text-muted mt-1">個月回本</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== MAIN LAYOUT ==================== -->
+    <div class="max-w-7xl mx-auto px-4 md:px-6 py-12">
+        <div class="lg:flex lg:gap-12">
+
+            <!-- 側邊目錄 (桌面版) -->
+            <aside class="sidebar-nav lg:w-64 lg:flex-shrink-0">
+                <nav class="lg:sticky lg:top-8">
+                    <div class="bg-white rounded-2xl shadow-sm border border-border-soft p-6">
+                        <h3 class="text-sm font-bold text-text-muted uppercase tracking-wider mb-4">目錄</h3>
+                        <ul class="space-y-1">
+                            <li><a href="#summary" class="nav-link block py-2 px-3 rounded-lg text-sm">執行摘要</a></li>
+                            <li><a href="#what-is-skills" class="nav-link block py-2 px-3 rounded-lg text-sm">A. Skills 是什麼</a></li>
+                            <li><a href="#target-market" class="nav-link block py-2 px-3 rounded-lg text-sm">B. 目標市場</a></li>
+                            <li><a href="#product-design" class="nav-link block py-2 px-3 rounded-lg text-sm">C. 產品設計</a></li>
+                            <li><a href="#adoption-path" class="nav-link block py-2 px-3 rounded-lg text-sm">D. 導入路徑</a></li>
+                            <li><a href="#roi" class="nav-link block py-2 px-3 rounded-lg text-sm">E. ROI 計算</a></li>
+                            <li><a href="#productization" class="nav-link block py-2 px-3 rounded-lg text-sm">F. 產品化路徑</a></li>
+                            <li><a href="#competition" class="nav-link block py-2 px-3 rounded-lg text-sm">G. 競爭分析</a></li>
+                            <li><a href="#risk" class="nav-link block py-2 px-3 rounded-lg text-sm">H. 風險與護欄</a></li>
+                            <li><a href="#action-plan" class="nav-link block py-2 px-3 rounded-lg text-sm">I. 90 天計畫</a></li>
+                            <li><a href="#one-pager" class="nav-link block py-2 px-3 rounded-lg text-sm">J. 客戶簡介</a></li>
+                            <li><a href="#references" class="nav-link block py-2 px-3 rounded-lg text-sm">L. 參考資料</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </aside>
+
+            <!-- 主要內容區 -->
+            <main class="lg:flex-1 min-w-0">
+
+                <!-- ==================== 0. 執行摘要 ==================== -->
+                <section id="summary" class="mb-16 scroll-animate">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-8">
+                        <span class="gradient-text">執行摘要</span>
+                    </h2>
+
+                    <!-- 核心問題 -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-border-soft p-8 mb-8">
+                        <h3 class="text-xl font-bold text-text-main mb-4">這樣能賺錢嗎？</h3>
+                        <p class="text-2xl md:text-3xl font-bold text-primary">
+                            能。<span class="text-text-main font-normal text-lg md:text-xl">但不是賣「Skills」，而是賣「省下的時間與降低的風險」。</span>
+                        </p>
+                    </div>
+
+                    <!-- 三個核心結論卡片 -->
+                    <h3 class="text-xl font-bold text-text-main mb-6">三個核心結論</h3>
+                    <div class="grid md:grid-cols-3 gap-6 mb-8">
+                        <!-- 結論 1 -->
+                        <div class="bg-white rounded-2xl shadow-sm border border-border-soft p-6 card-hover">
+                            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
+                                <span class="text-2xl font-bold text-primary">1</span>
+                            </div>
+                            <h4 class="font-bold text-lg mb-2">客戶不買技術，買結果</h4>
+                            <p class="text-text-muted text-base">定價按「省多少」而非「功能多少」</p>
+                        </div>
+                        <!-- 結論 2 -->
+                        <div class="bg-white rounded-2xl shadow-sm border border-border-soft p-6 card-hover">
+                            <div class="w-12 h-12 bg-secondary/10 rounded-xl flex items-center justify-center mb-4">
+                                <span class="text-2xl font-bold text-secondary">2</span>
+                            </div>
+                            <h4 class="font-bold text-lg mb-2">先打贏一個小市場</h4>
+                            <p class="text-text-muted text-base">鎖定 10-50 人專業服務公司</p>
+                        </div>
+                        <!-- 結論 3 -->
+                        <div class="bg-white rounded-2xl shadow-sm border border-border-soft p-6 card-hover">
+                            <div class="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mb-4">
+                                <span class="text-2xl font-bold text-accent">3</span>
+                            </div>
+                            <h4 class="font-bold text-lg mb-2">最大競爭對手是「維持現狀」</h4>
+                            <p class="text-text-muted text-base">導入路徑比功能重要</p>
+                        </div>
+                    </div>
+
+                    <!-- 建議第一步 -->
+                    <div class="bg-gradient-to-r from-primary/10 via-secondary/5 to-accent/10 rounded-2xl p-8">
+                        <h3 class="text-xl font-bold text-text-main mb-4">建議第一步</h3>
+                        <p class="text-lg">
+                            用現有的 LINE Bot 實作，包裝成「<strong class="text-primary">專業服務公司內規問答機器人</strong>」，月費 <strong class="text-primary">NT$ 8,000</strong> 起，先簽 5 家。
+                        </p>
+                    </div>
+                </section>
+
+                <!-- ==================== A. Skills 是什麼 ==================== -->
+                <section id="what-is-skills" class="mb-16 scroll-animate">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-8">
+                        <span class="text-primary">A.</span> Agent Skills 是什麼
+                        <span class="block text-lg font-normal text-text-muted mt-2">給老闆看的版本</span>
+                    </h2>
+
+                    <!-- 一句話定義 -->
+                    <div class="quote-block rounded-xl p-6 mb-8">
+                        <p class="text-xl md:text-2xl font-bold text-text-main">
+                            Skills 是把「公司的作業知識」變成「AI 可以執行的指令包」。
+                        </p>
+                    </div>
+
+                    <p class="text-lg mb-8">
+                        不是聊天機器人。是你把「報價怎麼做」「請款流程是什麼」「客戶常問問題怎麼回」寫成 AI 看得懂的格式，然後 AI 就能照著做。
+                    </p>
+
+                    <!-- 插圖 -->
+                    <div class="rounded-2xl overflow-hidden shadow-lg mb-8">
+                        <img
+                            src="illustrations/01-framework-skills-concept.png"
+                            alt="Skills 概念：從混亂的知識到模組化技能"
+                            class="w-full h-auto"
+                            width="1792"
+                            height="1024"
+                            loading="lazy"
+                        >
+                    </div>
+
+                    <!-- 跟以前有什麼不同 -->
+                    <h3 class="text-xl font-bold text-text-main mb-6">跟以前有什麼不同</h3>
+                    <div class="overflow-x-auto mb-8">
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>以前</th>
+                                    <th>現在（Skills）</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>寫程式自動化 → 要工程師</td>
+                                    <td class="text-primary font-medium">用自然語言描述流程 → 不用工程師</td>
+                                </tr>
+                                <tr>
+                                    <td>流程圖 + 分支 → 改一個要改整串</td>
+                                    <td class="text-primary font-medium">模組化技能 → 換一塊不影響其他</td>
+                                </tr>
+                                <tr>
+                                    <td>操作手冊是手冊，程式是程式</td>
+                                    <td class="text-primary font-medium">技能本身就是可執行的操作手冊</td>
+                                </tr>
+                                <tr>
+                                    <td>例外靠人處理</td>
+                                    <td class="text-primary font-medium">例外交給 AI 判斷，確定的交給程式</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 企業最在意的四件事 -->
+                    <h3 class="text-xl font-bold text-text-main mb-6">企業最在意的四件事，Skills 怎麼解決</h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="bg-white rounded-xl border border-border-soft p-5 card-hover">
+                            <div class="font-bold text-text-main mb-2">交接困難</div>
+                            <p class="text-text-muted">技能檔案本身就是文件，新人讀完就能用</p>
+                        </div>
+                        <div class="bg-white rounded-xl border border-border-soft p-5 card-hover">
+                            <div class="font-bold text-text-main mb-2">改流程很痛</div>
+                            <p class="text-text-muted">改一個技能不影響其他，可以版本控管</p>
+                        </div>
+                        <div class="bg-white rounded-xl border border-border-soft p-5 card-hover">
+                            <div class="font-bold text-text-main mb-2">怕 AI 亂搞</div>
+                            <p class="text-text-muted">可設定「只能讀不能改」、「要人確認才執行」</p>
+                        </div>
+                        <div class="bg-white rounded-xl border border-border-soft p-5 card-hover">
+                            <div class="font-bold text-text-main mb-2">換供應商被綁死</div>
+                            <p class="text-text-muted">開放標準，Anthropic 和 OpenAI 都支援</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== B. 目標市場 ==================== -->
+                <section id="target-market" class="mb-16 scroll-animate">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-8">
+                        <span class="text-primary">B.</span> 目標市場
+                        <span class="block text-lg font-normal text-text-muted mt-2">先打一個，打到贏</span>
+                    </h2>
+
+                    <!-- 為什麼不能打中小企業 -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-border-soft p-8 mb-8">
+                        <h3 class="text-xl font-bold text-text-main mb-4">為什麼不能打「中小企業」</h3>
+                        <p class="mb-4">「中小企業」包含：</p>
+                        <div class="flex flex-wrap gap-3 mb-4">
+                            <span class="px-4 py-2 bg-gray-100 rounded-full text-sm">賣雞排的</span>
+                            <span class="px-4 py-2 bg-gray-100 rounded-full text-sm">做模具的</span>
+                            <span class="px-4 py-2 bg-gray-100 rounded-full text-sm">會計師事務所</span>
+                            <span class="px-4 py-2 bg-gray-100 rounded-full text-sm">網紅經紀公司</span>
+                        </div>
+                        <p class="text-accent font-medium">他們的痛完全不同。你不可能用同一套產品打所有人。</p>
+                    </div>
+
+                    <!-- 保齡球策略插圖 -->
+                    <div class="rounded-2xl overflow-hidden shadow-lg mb-8">
+                        <img
+                            src="illustrations/02-infographic-bowling-strategy.png"
+                            alt="保齡球策略：先打一個，打到贏"
+                            class="w-full h-auto"
+                            width="1792"
+                            height="1024"
+                            loading="lazy"
+                        >
+                    </div>
+
+                    <!-- 為什麼選專業服務公司 -->
+                    <h3 class="text-xl font-bold text-text-main mb-6">建議的「保齡球第一瓶」：10-50 人專業服務公司</h3>
+                    <div class="overflow-x-auto mb-8">
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>條件</th>
+                                    <th>為什麼選他們</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="font-medium">工作本質</td>
+                                    <td>把知識變成文件（報告、合約、建議書）→ Skills 完美契合</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-medium">決策鏈</td>
+                                    <td>老闆一個人決定，不用跑採購流程</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-medium">同業交流</td>
+                                    <td>會計師認識會計師，律師認識律師，一家成功會互相推薦</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-medium">痛點明確</td>
+                                    <td>助理貴、流動率高、交接痛苦</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 具體對象 -->
+                    <div class="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-6 mb-8">
+                        <h4 class="font-bold text-text-main mb-4">具體對象</h4>
+                        <div class="flex flex-wrap gap-3">
+                            <span class="px-4 py-2 bg-white rounded-full text-sm font-medium">會計師事務所</span>
+                            <span class="px-4 py-2 bg-white rounded-full text-sm font-medium">法律事務所</span>
+                            <span class="px-4 py-2 bg-white rounded-full text-sm font-medium">管理顧問公司</span>
+                            <span class="px-4 py-2 bg-white rounded-full text-sm font-medium">專利/商標事務所</span>
+                            <span class="px-4 py-2 bg-white rounded-full text-sm font-medium">建築師/室內設計事務所</span>
+                        </div>
+                    </div>
+
+                    <!-- 痛點表格 -->
+                    <h3 class="text-xl font-bold text-text-main mb-6">這群人的具體痛點</h3>
+                    <div class="overflow-x-auto">
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>痛點</th>
+                                    <th>頻率</th>
+                                    <th>你能解決的程度</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>回覆客戶常見問題</td>
+                                    <td>每天</td>
+                                    <td><span class="text-primary font-bold">90%</span>（限定文件問答）</td>
+                                </tr>
+                                <tr>
+                                    <td>整理會議紀錄與待辦</td>
+                                    <td>每天</td>
+                                    <td><span class="text-primary font-bold">80%</span>（摘要+行動項目）</td>
+                                </tr>
+                                <tr>
+                                    <td>製作報價單/提案</td>
+                                    <td>每週</td>
+                                    <td><span class="text-secondary font-bold">70%</span>（套模板+風險標記）</td>
+                                </tr>
+                                <tr>
+                                    <td>新人訓練/交接</td>
+                                    <td>每季</td>
+                                    <td><span class="text-secondary font-bold">60%</span>（知識庫+問答）</td>
+                                </tr>
+                                <tr>
+                                    <td>合約/文件審閱</td>
+                                    <td>每週</td>
+                                    <td><span class="text-accent font-bold">50%</span>（標記重點+比對範本）</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- ==================== C. 產品設計 ==================== -->
+                <section id="product-design" class="mb-16 scroll-animate">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-8">
+                        <span class="text-primary">C.</span> 產品設計
+                        <span class="block text-lg font-normal text-text-muted mt-2">簡單到老闆秒懂</span>
+                    </h2>
+
+                    <!-- 三個方案定價卡片 -->
+                    <h3 class="text-xl font-bold text-text-main mb-6">三個方案</h3>
+                    <div class="grid md:grid-cols-3 gap-6 mb-12">
+                        <!-- 入門方案 -->
+                        <div class="bg-white rounded-2xl border border-border-soft p-6 card-hover">
+                            <div class="text-center mb-6">
+                                <h4 class="text-lg font-bold text-text-main mb-2">入門</h4>
+                                <div class="text-4xl font-bold text-text-main tabular-nums">
+                                    8,000
+                                    <span class="text-base font-normal text-text-muted">/月</span>
+                                </div>
+                            </div>
+                            <ul class="space-y-3 mb-6">
+                                <li class="flex items-start gap-2">
+                                    <span class="text-secondary mt-1">✓</span>
+                                    <span>LINE 問答</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-secondary mt-1">✓</span>
+                                    <span>1 個文件庫（50 份內）</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-secondary mt-1">✓</span>
+                                    <span>基本紀錄</span>
+                                </li>
+                            </ul>
+                            <div class="text-center text-sm text-text-muted">適合：想試試看</div>
+                        </div>
+
+                        <!-- 專業方案（高亮） -->
+                        <div class="bg-white rounded-2xl p-6 pricing-highlight relative">
+                            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-white text-sm font-bold px-4 py-1 rounded-full">
+                                最受歡迎
+                            </div>
+                            <div class="text-center mb-6">
+                                <h4 class="text-lg font-bold text-primary mb-2">專業</h4>
+                                <div class="text-4xl font-bold text-primary tabular-nums">
+                                    25,000
+                                    <span class="text-base font-normal text-text-muted">/月</span>
+                                </div>
+                            </div>
+                            <ul class="space-y-3 mb-6">
+                                <li class="flex items-start gap-2">
+                                    <span class="text-primary mt-1">✓</span>
+                                    <span>LINE + Web</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-primary mt-1">✓</span>
+                                    <span>3 個流程技能</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-primary mt-1">✓</span>
+                                    <span>客製模板</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-primary mt-1">✓</span>
+                                    <span>專屬支援</span>
+                                </li>
+                            </ul>
+                            <div class="text-center text-sm text-primary font-medium">適合：認真要用</div>
+                        </div>
+
+                        <!-- 旗艦方案 -->
+                        <div class="bg-white rounded-2xl border border-border-soft p-6 card-hover">
+                            <div class="text-center mb-6">
+                                <h4 class="text-lg font-bold text-text-main mb-2">旗艦</h4>
+                                <div class="text-4xl font-bold text-text-main tabular-nums">
+                                    60,000
+                                    <span class="text-base font-normal text-text-muted">/月</span>
+                                </div>
+                            </div>
+                            <ul class="space-y-3 mb-6">
+                                <li class="flex items-start gap-2">
+                                    <span class="text-secondary mt-1">✓</span>
+                                    <span>專業版全部功能</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-secondary mt-1">✓</span>
+                                    <span>系統整合</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-secondary mt-1">✓</span>
+                                    <span>進階稽核</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-secondary mt-1">✓</span>
+                                    <span>優先更新</span>
+                                </li>
+                            </ul>
+                            <div class="text-center text-sm text-text-muted">適合：要全面導入</div>
+                        </div>
+                    </div>
+
+                    <!-- 定價邏輯 -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-border-soft p-8 mb-8">
+                        <h3 class="text-xl font-bold text-text-main mb-4">為什麼這樣定價</h3>
+                        <p class="mb-4"><strong>Jason Lemkin 的 SMB 定價法則：</strong></p>
+                        <ul class="space-y-2 mb-6">
+                            <li class="flex items-start gap-2">
+                                <span class="text-primary">•</span>
+                                <span>月費要低到「老闆不用問老婆」（&lt; NT$ 10,000）才能快速成交</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-primary">•</span>
+                                <span>但要有升級空間讓 LTV（客戶終身價值）成長</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-primary">•</span>
+                                <span>年繳打折是標配，讓現金流更好</span>
+                            </li>
+                        </ul>
+                        <div class="bg-primary/5 rounded-xl p-4">
+                            <p class="font-medium">建議：</p>
+                            <p>入門方案年繳 = 10 個月（NT$ 80,000/年）</p>
+                            <p>專業方案年繳 = 10 個月（NT$ 250,000/年）</p>
+                        </div>
+                    </div>
+
+                    <!-- 你賣的不是功能，是結果 -->
+                    <h3 class="text-xl font-bold text-text-main mb-6">你賣的不是功能，是結果</h3>
+                    <div class="overflow-x-auto">
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th class="bg-gray-400">不要說</th>
+                                    <th>要說</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-text-muted line-through">「技能包」</td>
+                                    <td class="text-primary font-medium">「每月省 40 小時行政工作」</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-text-muted line-through">「受控執行環境」</td>
+                                    <td class="text-primary font-medium">「不用碰任何技術，LINE 上就能用」</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-text-muted line-through">「Skills 可組合」</td>
+                                    <td class="text-primary font-medium">「流程變了隨時能改，不用重新開發」</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-text-muted line-through">「最小權限控管」</td>
+                                    <td class="text-primary font-medium">「AI 只能看不能改，重要的事一定先問你」</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- ==================== D. 導入路徑 ==================== -->
+                <section id="adoption-path" class="mb-16 scroll-animate">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-8">
+                        <span class="text-primary">D.</span> 導入路徑
+                        <span class="block text-lg font-normal text-text-muted mt-2">沒有這個就不會落地</span>
+                    </h2>
+
+                    <!-- Thomas Davenport 引言 -->
+                    <div class="quote-block rounded-xl p-6 mb-8">
+                        <p class="text-lg italic text-text-main">
+                            「企業 AI 落地失敗，80% 不是技術問題，是組織問題。」
+                        </p>
+                        <p class="text-text-muted mt-2">— Thomas Davenport</p>
+                    </div>
+
+                    <!-- 插圖 -->
+                    <div class="rounded-2xl overflow-hidden shadow-lg mb-8">
+                        <img
+                            src="illustrations/03-flowchart-adoption-phases.png"
+                            alt="三階段導入法：從旁觀到接管"
+                            class="w-full h-auto"
+                            width="1792"
+                            height="1024"
+                            loading="lazy"
+                        >
+                    </div>
+
+                    <!-- 三階段時間軸 -->
+                    <h3 class="text-xl font-bold text-text-main mb-6">三階段導入法</h3>
+                    <div class="relative pl-8 md:pl-12 mb-12">
+                        <!-- 時間軸線 -->
+                        <div class="absolute left-3 md:left-5 top-0 bottom-0 w-1 timeline-line rounded-full"></div>
+
+                        <!-- Phase 1 -->
+                        <div class="relative mb-8">
+                            <div class="absolute -left-5 md:-left-7 w-6 h-6 bg-primary rounded-full border-4 border-white shadow"></div>
+                            <div class="bg-white rounded-2xl border border-border-soft p-6 ml-4">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <span class="px-3 py-1 bg-primary/10 text-primary text-sm font-bold rounded-full">Phase 1</span>
+                                    <span class="text-text-muted">週 1-2</span>
+                                </div>
+                                <h4 class="text-lg font-bold mb-2">旁觀期</h4>
+                                <ul class="space-y-2 text-text-muted">
+                                    <li>• AI 產出給人看，人還是自己做</li>
+                                    <li>• 目的：建立信任、找出 AI 會錯的地方</li>
+                                    <li>• 指標：員工願意看 AI 建議的比例</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Phase 2 -->
+                        <div class="relative mb-8">
+                            <div class="absolute -left-5 md:-left-7 w-6 h-6 bg-secondary rounded-full border-4 border-white shadow"></div>
+                            <div class="bg-white rounded-2xl border border-border-soft p-6 ml-4">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <span class="px-3 py-1 bg-secondary/10 text-secondary text-sm font-bold rounded-full">Phase 2</span>
+                                    <span class="text-text-muted">週 3-4</span>
+                                </div>
+                                <h4 class="text-lg font-bold mb-2">輔助期</h4>
+                                <ul class="space-y-2 text-text-muted">
+                                    <li>• AI 產出草稿，人修改後執行</li>
+                                    <li>• 目的：讓人習慣、累積修改樣本優化 AI</li>
+                                    <li>• 指標：草稿採用率、修改幅度</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Phase 3 -->
+                        <div class="relative">
+                            <div class="absolute -left-5 md:-left-7 w-6 h-6 bg-accent rounded-full border-4 border-white shadow"></div>
+                            <div class="bg-white rounded-2xl border border-border-soft p-6 ml-4">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <span class="px-3 py-1 bg-accent/10 text-accent text-sm font-bold rounded-full">Phase 3</span>
+                                    <span class="text-text-muted">月 2+</span>
+                                </div>
+                                <h4 class="text-lg font-bold mb-2">接管期</h4>
+                                <ul class="space-y-2 text-text-muted">
+                                    <li>• AI 執行，人抽查</li>
+                                    <li>• 目的：真正省時間</li>
+                                    <li>• 指標：每週省下的工時</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 每個階段的交付 -->
+                    <h3 class="text-xl font-bold text-text-main mb-6">每個階段你要做的事</h3>
+                    <div class="overflow-x-auto mb-8">
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>階段</th>
+                                    <th>你的交付</th>
+                                    <th>時數估計</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="font-medium">導入前</td>
+                                    <td>流程盤點、文件收集、環境設定</td>
+                                    <td>8 hr</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-medium">Phase 1</td>
+                                    <td>開通帳號、教育訓練、每日檢視</td>
+                                    <td>4 hr</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-medium">Phase 2</td>
+                                    <td>優化調整、例外處理設計</td>
+                                    <td>4 hr</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-medium">Phase 3</td>
+                                    <td>效益報告、下一流程規劃</td>
+                                    <td>2 hr</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="bg-primary/5 rounded-xl p-6">
+                        <p class="font-medium text-text-main">
+                            <strong>總計：</strong>約 18-20 小時 = 這就是你「一次性導入費」的成本基礎
+                        </p>
+                    </div>
+                </section>
+
+                <!-- ==================== E. ROI 計算 ==================== -->
+                <section id="roi" class="mb-16 scroll-animate">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-8">
+                        <span class="text-primary">E.</span> ROI 計算
+                        <span class="block text-lg font-normal text-text-muted mt-2">讓老闆秒懂值不值得</span>
+                    </h2>
+
+                    <h3 class="text-xl font-bold text-text-main mb-6">範例：20 人會計師事務所</h3>
+
+                    <!-- Before/After 視覺對比 -->
+                    <div class="grid md:grid-cols-2 gap-6 mb-8">
+                        <!-- Before -->
+                        <div class="bg-white rounded-2xl border border-border-soft p-6">
+                            <h4 class="text-lg font-bold text-text-main mb-4 flex items-center gap-2">
+                                <span class="w-3 h-3 bg-gray-400 rounded-full"></span>
+                                現況成本
+                            </h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>回覆客戶基本問題</span>
+                                        <span class="font-medium">40 hr</span>
+                                    </div>
+                                    <div class="h-3 bg-gray-200 rounded-full">
+                                        <div class="h-full bg-gray-400 rounded-full" style="width: 100%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>整理會議紀錄</span>
+                                        <span class="font-medium">20 hr</span>
+                                    </div>
+                                    <div class="h-3 bg-gray-200 rounded-full">
+                                        <div class="h-full bg-gray-400 rounded-full" style="width: 50%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>製作報價單初稿</span>
+                                        <span class="font-medium">15 hr</span>
+                                    </div>
+                                    <div class="h-3 bg-gray-200 rounded-full">
+                                        <div class="h-full bg-gray-400 rounded-full" style="width: 37.5%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>新人交接說明</span>
+                                        <span class="font-medium">10 hr</span>
+                                    </div>
+                                    <div class="h-3 bg-gray-200 rounded-full">
+                                        <div class="h-full bg-gray-400 rounded-full" style="width: 25%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-6 pt-4 border-t border-border-soft">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold">合計</span>
+                                    <span class="text-2xl font-bold text-text-main">85 hr / NT$ 36,500</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- After -->
+                        <div class="bg-white rounded-2xl border-2 border-primary p-6">
+                            <h4 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+                                <span class="w-3 h-3 bg-primary rounded-full"></span>
+                                導入後節省
+                            </h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>回覆客戶基本問題</span>
+                                        <span class="font-medium text-primary">-32 hr (80%)</span>
+                                    </div>
+                                    <div class="h-3 bg-primary/20 rounded-full">
+                                        <div class="h-full bg-primary rounded-full progress-bar" style="width: 80%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>整理會議紀錄</span>
+                                        <span class="font-medium text-primary">-14 hr (70%)</span>
+                                    </div>
+                                    <div class="h-3 bg-primary/20 rounded-full">
+                                        <div class="h-full bg-primary rounded-full progress-bar" style="width: 70%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>製作報價單初稿</span>
+                                        <span class="font-medium text-secondary">-9 hr (60%)</span>
+                                    </div>
+                                    <div class="h-3 bg-secondary/20 rounded-full">
+                                        <div class="h-full bg-secondary rounded-full progress-bar" style="width: 60%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>新人交接說明</span>
+                                        <span class="font-medium text-secondary">-5 hr (50%)</span>
+                                    </div>
+                                    <div class="h-3 bg-secondary/20 rounded-full">
+                                        <div class="h-full bg-secondary rounded-full progress-bar" style="width: 50%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-6 pt-4 border-t border-primary/20">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold text-primary">節省</span>
+                                    <span class="text-2xl font-bold text-primary">60 hr / NT$ 25,400</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ROI 結論 -->
+                    <div class="bg-gradient-to-r from-primary to-accent rounded-2xl p-8 text-white mb-8">
+                        <h3 class="text-xl font-bold mb-4">ROI 結論</h3>
+                        <div class="grid md:grid-cols-3 gap-6 text-center">
+                            <div>
+                                <div class="text-3xl font-bold">NT$ 25,000</div>
+                                <div class="text-white/80">專業方案月費</div>
+                            </div>
+                            <div>
+                                <div class="text-3xl font-bold">NT$ 25,400</div>
+                                <div class="text-white/80">每月節省</div>
+                            </div>
+                            <div>
+                                <div class="text-4xl font-bold animate-float">1 個月</div>
+                                <div class="text-white/80">回本時間</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 插圖 -->
+                    <div class="rounded-2xl overflow-hidden shadow-lg mb-8">
+                        <img
+                            src="illustrations/04-comparison-ai-vs-human.png"
+                            alt="AI 助理 vs 人類助理：值不值得？"
+                            class="w-full h-auto"
+                            width="1792"
+                            height="1024"
+                            loading="lazy"
+                        >
+                    </div>
+
+                    <!-- 給老闆的一句話 -->
+                    <div class="quote-block rounded-xl p-6">
+                        <p class="text-xl font-medium text-text-main">
+                            「你請一個助理月薪 3-4 萬，還要訓練、會請假、會離職。這個 AI 助理月費 2.5 萬，24 小時待命，永遠不會忘記你教過的事。」
+                        </p>
+                    </div>
+                </section>
+
+                <!-- ==================== F. 產品化路徑 ==================== -->
+                <section id="productization" class="mb-16 scroll-animate">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-8">
+                        <span class="text-primary">F.</span> 你現有實作的產品化路徑
+                    </h2>
+
+                    <!-- 產品 1: LINE Bot -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-border-soft p-8 mb-6">
+                        <h3 class="text-xl font-bold text-text-main mb-4">1. LINE Bot → 「專業服務公司內規問答機器人」</h3>
+
+                        <div class="overflow-x-auto mb-6">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>現有功能</th>
+                                        <th>包裝成</th>
+                                        <th>賣點</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>PDF 問答</td>
+                                        <td>「內規/合約/手冊即時查詢」</td>
+                                        <td class="text-primary">新人不用問前輩</td>
+                                    </tr>
+                                    <tr>
+                                        <td>對話呼叫 Skills</td>
+                                        <td>「用說的完成工作」</td>
+                                        <td class="text-primary">不用開電腦</td>
+                                    </tr>
+                                    <tr>
+                                        <td>圖片生成</td>
+                                        <td>「簡報配圖/社群貼文」</td>
+                                        <td class="text-primary">不用等設計</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="bg-primary/5 rounded-xl p-6">
+                            <h4 class="font-bold text-primary mb-2">第一個產品：「所內小助理」</h4>
+                            <ul class="space-y-1 text-text-main">
+                                <li>• 功能：上傳所內規範/範本 → LINE 問答 → 找到相關規定/範本</li>
+                                <li>• 定價：<strong>NT$ 8,000/月</strong>（50 份文件內）</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 產品 2: Telegram Bot -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-border-soft p-8 mb-6">
+                        <h3 class="text-xl font-bold text-text-main mb-4">2. Telegram Bot + macOS → 「老闆私人助理」</h3>
+
+                        <div class="overflow-x-auto mb-6">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>現有功能</th>
+                                        <th>包裝成</th>
+                                        <th>賣點</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>加到 Apple 行事曆</td>
+                                        <td>「用說的排行程」</td>
+                                        <td class="text-primary">開車/走路時也能排</td>
+                                    </tr>
+                                    <tr>
+                                        <td>寄信</td>
+                                        <td>「用說的寫信」</td>
+                                        <td class="text-primary">口述大意，AI 潤稿</td>
+                                    </tr>
+                                    <tr>
+                                        <td>整理檔案</td>
+                                        <td>「用說的找檔案」</td>
+                                        <td class="text-primary">不用記放哪裡</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p class="text-text-muted">定位：這是「旗艦方案」的加值功能，不單獨賣。</p>
+                    </div>
+
+                    <!-- 產品 3: 新聞抓取 -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-border-soft p-8">
+                        <h3 class="text-xl font-bold text-text-main mb-4">3. 新聞抓取 + 評分 + TTS → 「產業情蒐晨報」</h3>
+
+                        <div class="overflow-x-auto mb-6">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>現有功能</th>
+                                        <th>包裝成</th>
+                                        <th>賣點</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>抓取+評分</td>
+                                        <td>「只看重要的」</td>
+                                        <td class="text-primary">每天 5 分鐘掌握產業動態</td>
+                                    </tr>
+                                    <tr>
+                                        <td>語音播報</td>
+                                        <td>「通勤時用聽的」</td>
+                                        <td class="text-primary">眼睛不用盯螢幕</td>
+                                    </tr>
+                                    <tr>
+                                        <td>定期更新</td>
+                                        <td>「每天自動送到 LINE」</td>
+                                        <td class="text-primary">不用自己去找</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p class="text-text-muted">定位：專業方案的加值模組，<strong>NT$ 5,000/月</strong> 加購。</p>
+                    </div>
+                </section>
+
+                <!-- ==================== G. 競爭分析 ==================== -->
+                <section id="competition" class="mb-16 scroll-animate">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-8">
+                        <span class="text-primary">G.</span> 競爭分析
+                        <span class="block text-lg font-normal text-text-muted mt-2">你的敵人不是大廠</span>
+                    </h2>
+
+                    <!-- Clayton Christensen 引言 -->
+                    <div class="quote-block rounded-xl p-6 mb-8">
+                        <p class="text-lg italic text-text-main">
+                            「你的競爭對手不是 Anthropic，是『客戶決定繼續用 Excel 和 LINE 群組人工處理』。」
+                        </p>
+                        <p class="text-text-muted mt-2">— Clayton Christensen</p>
+                    </div>
+
+                    <!-- 競爭格局 -->
+                    <div class="overflow-x-auto mb-8">
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>競爭者</th>
+                                    <th>他們的定位</th>
+                                    <th>為什麼不用怕</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="font-medium">Anthropic/OpenAI</td>
+                                    <td>賣 API 給大企業</td>
+                                    <td>不會來幫 30 人事務所設定環境</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-medium">大型 SI</td>
+                                    <td>百萬級專案</td>
+                                    <td>中小企業買不起</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-medium">其他 AI 新創</td>
+                                    <td>多半做垂直 SaaS</td>
+                                    <td>你做的是水平能力</td>
+                                </tr>
+                                <tr class="bg-accent/10">
+                                    <td class="font-bold text-accent">維持現狀</td>
+                                    <td>繼續用人工</td>
+                                    <td class="font-bold text-accent">這才是真正對手</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 你的護城河 -->
+                    <h3 class="text-xl font-bold text-text-main mb-6">你的護城河</h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="bg-white rounded-xl border border-border-soft p-5 card-hover">
+                            <div class="font-bold text-primary mb-2">技術門檻</div>
+                            <p class="text-text-muted">客戶不會自己搞 Shell/npm/權限</p>
+                        </div>
+                        <div class="bg-white rounded-xl border border-border-soft p-5 card-hover">
+                            <div class="font-bold text-secondary mb-2">使用習慣</div>
+                            <p class="text-text-muted">一旦習慣用 LINE 問 AI，就很難換</p>
+                        </div>
+                        <div class="bg-white rounded-xl border border-border-soft p-5 card-hover">
+                            <div class="font-bold text-accent mb-2">累積的客製</div>
+                            <p class="text-text-muted">客戶的模板、規則、例外處理都在你這</p>
+                        </div>
+                        <div class="bg-white rounded-xl border border-border-soft p-5 card-hover">
+                            <div class="font-bold text-primary mb-2">信任關係</div>
+                            <p class="text-text-muted">中小企業買人不買產品</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== H. 風險與護欄 ==================== -->
+                <section id="risk" class="mb-16 scroll-animate">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-8">
+                        <span class="text-primary">H.</span> 風險與護欄
+                        <span class="block text-lg font-normal text-text-muted mt-2">把這變成銷售優勢</span>
+                    </h2>
+
+                    <!-- 企業最怕的三件事 -->
+                    <h3 class="text-xl font-bold text-text-main mb-6">企業最怕的三件事</h3>
+                    <div class="space-y-4 mb-8">
+                        <div class="bg-white rounded-xl border border-border-soft p-6 card-hover">
+                            <div class="flex items-start gap-4">
+                                <div class="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                                    <span class="text-xl">⚠️</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-text-main mb-1">AI 亂改東西</h4>
+                                    <p class="text-text-muted mb-2">你怎麼解決：預設只能讀，改東西要人確認</p>
+                                    <p class="text-primary font-medium">「AI 只能建議，按下確認才會動」</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl border border-border-soft p-6 card-hover">
+                            <div class="flex items-start gap-4">
+                                <div class="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                                    <span class="text-xl">🔒</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-text-main mb-1">資料外洩</h4>
+                                    <p class="text-text-muted mb-2">你怎麼解決：權限分級 + 紀錄誰看了什麼</p>
+                                    <p class="text-primary font-medium">「誰問了什麼、AI 回了什麼，全部有紀錄」</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl border border-border-soft p-6 card-hover">
+                            <div class="flex items-start gap-4">
+                                <div class="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                                    <span class="text-xl">❓</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-text-main mb-1">AI 出錯怎麼辦</h4>
+                                    <p class="text-text-muted mb-2">你怎麼解決：輸出必附引用來源</p>
+                                    <p class="text-primary font-medium">「每個回答都告訴你根據哪份文件」</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 標準話術 -->
+                    <div class="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-8">
+                        <h3 class="text-xl font-bold text-text-main mb-4">標準話術</h3>
+                        <p class="text-lg">
+                            「我們的 AI 有三個保險：<br>
+                            <strong class="text-primary">1. 只讀不改</strong>——除非你按確認<br>
+                            <strong class="text-secondary">2. 全程紀錄</strong>——誰問什麼、AI 答什麼<br>
+                            <strong class="text-accent">3. 必附出處</strong>——每個答案都說根據哪裡」
+                        </p>
+                    </div>
+                </section>
+
+                <!-- ==================== I. 90 天行動計畫 ==================== -->
+                <section id="action-plan" class="mb-16 scroll-animate">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-8">
+                        <span class="text-primary">I.</span> 90 天行動計畫
+                    </h2>
+
+                    <!-- 月 1 -->
+                    <div class="mb-8">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center">
+                                <span class="text-2xl font-bold text-white">月1</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-text-main">驗證產品市場契合</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>週</th>
+                                        <th>行動</th>
+                                        <th>目標</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="font-bold">1</td>
+                                        <td>包裝「所內小助理」產品頁</td>
+                                        <td class="text-primary">Landing page 上線</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">2</td>
+                                        <td>找 10 家事務所老闆聊</td>
+                                        <td class="text-primary">驗證痛點、調整話術</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">3</td>
+                                        <td>免費試用 3 家</td>
+                                        <td class="text-primary">收集回饋</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">4</td>
+                                        <td>調整產品、確定定價</td>
+                                        <td class="text-primary">準備收費</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 月 2 -->
+                    <div class="mb-8">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-16 h-16 bg-secondary rounded-2xl flex items-center justify-center">
+                                <span class="text-2xl font-bold text-white">月2</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-text-main">簽下前 5 個付費客戶</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>週</th>
+                                        <th>行動</th>
+                                        <th>目標</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="font-bold">5</td>
+                                        <td>試用轉付費</td>
+                                        <td class="text-secondary">至少 2 家</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">6</td>
+                                        <td>靠推薦找新客戶</td>
+                                        <td class="text-secondary">再談 5 家</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">7</td>
+                                        <td>優化導入流程</td>
+                                        <td class="text-secondary">SOP 化</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">8</td>
+                                        <td>收集成功案例</td>
+                                        <td class="text-secondary">至少 1 個可公開</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 月 3 -->
+                    <div>
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-16 h-16 bg-accent rounded-2xl flex items-center justify-center">
+                                <span class="text-2xl font-bold text-white">月3</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-text-main">建立可複製模式</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>週</th>
+                                        <th>行動</th>
+                                        <th>目標</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="font-bold">9</td>
+                                        <td>寫成功案例</td>
+                                        <td class="text-accent">部落格/社群發布</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">10</td>
+                                        <td>建立轉介紹機制</td>
+                                        <td class="text-accent">推薦獎勵方案</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">11</td>
+                                        <td>準備第二個垂直市場</td>
+                                        <td class="text-accent">下一瓶保齡球</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">12</td>
+                                        <td>回顧調整</td>
+                                        <td class="text-accent">Q2 計畫</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== J. 客戶簡介 ==================== -->
+                <section id="one-pager" class="mb-16 scroll-animate">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-8">
+                        <span class="text-primary">J.</span> 附錄：給客戶看的一頁簡介
+                    </h2>
+
+                    <div class="bg-white rounded-2xl shadow-lg border border-border-soft p-8 md:p-12">
+                        <h3 class="text-3xl font-bold text-center gradient-text mb-2">所內小助理</h3>
+                        <p class="text-xl text-center text-text-muted mb-8">讓 AI 回答同仁的日常問題</p>
+
+                        <div class="grid md:grid-cols-3 gap-8 mb-8">
+                            <!-- 痛點 -->
+                            <div>
+                                <h4 class="font-bold text-accent mb-4">痛點</h4>
+                                <ul class="space-y-2 text-text-muted">
+                                    <li>• 新人一直問同樣的問題</li>
+                                    <li>• 資深同仁被打斷工作</li>
+                                    <li>• 內規/範本散落各處找不到</li>
+                                </ul>
+                            </div>
+                            <!-- 解法 -->
+                            <div>
+                                <h4 class="font-bold text-primary mb-4">解法</h4>
+                                <p class="text-text-main">
+                                    上傳所內文件 → 同仁用 LINE 問 → AI 秒回答案並附出處
+                                </p>
+                            </div>
+                            <!-- 效果 -->
+                            <div>
+                                <h4 class="font-bold text-secondary mb-4">效果</h4>
+                                <ul class="space-y-2 text-text-muted">
+                                    <li>• 每月省 30+ 小時重複回答</li>
+                                    <li>• 新人即時得到答案</li>
+                                    <li>• 知識不會隨人離職</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="bg-primary/5 rounded-xl p-6 text-center">
+                            <p class="text-lg mb-2">
+                                <strong>費用：</strong>月費 <span class="text-primary font-bold text-2xl">NT$ 8,000</span>（50 份文件內）
+                            </p>
+                            <p class="text-secondary font-medium">首月無效全額退費</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== L. 參考資料 ==================== -->
+                <section id="references" class="mb-16 scroll-animate">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-8">
+                        <span class="text-primary">L.</span> 參考資料
+                    </h2>
+
+                    <!-- 專家背景 -->
+                    <h3 class="text-xl font-bold text-text-main mb-6">專家背景</h3>
+                    <div class="grid md:grid-cols-2 gap-4 mb-8">
+                        <div class="bg-white rounded-xl border border-border-soft p-5">
+                            <h4 class="font-bold text-primary">Jason Lemkin</h4>
+                            <p class="text-sm text-text-muted mb-2">SaaStr 創辦人，SMB SaaS 專家</p>
+                            <p class="text-text-main">「賣結果不是賣技術」</p>
+                        </div>
+                        <div class="bg-white rounded-xl border border-border-soft p-5">
+                            <h4 class="font-bold text-secondary">Geoffrey Moore</h4>
+                            <p class="text-sm text-text-muted mb-2">《跨越鴻溝》作者</p>
+                            <p class="text-text-main">「先打一個小市場打到贏」</p>
+                        </div>
+                        <div class="bg-white rounded-xl border border-border-soft p-5">
+                            <h4 class="font-bold text-accent">Thomas Davenport</h4>
+                            <p class="text-sm text-text-muted mb-2">MIT/哈佛教授，企業 AI 權威</p>
+                            <p class="text-text-main">「沒有變革管理就沒有落地」</p>
+                        </div>
+                        <div class="bg-white rounded-xl border border-border-soft p-5">
+                            <h4 class="font-bold text-primary">Clayton Christensen</h4>
+                            <p class="text-sm text-text-muted mb-2">破壞式創新理論創始人</p>
+                            <p class="text-text-main">「你的敵人是維持現狀」</p>
+                        </div>
+                    </div>
+
+                    <!-- 技術參考 -->
+                    <h3 class="text-xl font-bold text-text-main mb-6">技術參考</h3>
+                    <ul class="space-y-2 text-text-muted mb-8">
+                        <li>• <a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" class="text-primary hover:underline" target="_blank">Anthropic: Equipping agents for the real world with Agent Skills</a></li>
+                        <li>• <a href="https://code.claude.com/docs/en/skills" class="text-primary hover:underline" target="_blank">Claude Code: Extend Claude with skills</a></li>
+                        <li>• <a href="https://agentskills.io/home" class="text-primary hover:underline" target="_blank">Agent Skills Open Standard</a></li>
+                        <li>• <a href="https://claude.com/blog/cowork-research-preview" class="text-primary hover:underline" target="_blank">Claude Blog: Introducing Cowork</a></li>
+                        <li>• <a href="https://developers.openai.com/codex/skills/" class="text-primary hover:underline" target="_blank">OpenAI Codex Skills</a></li>
+                    </ul>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="bg-orange-950 text-white py-12">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <p class="text-white/60 text-sm">
+                AI 魔法工具箱 — 以 Agent Skills 為核心的產品化與盈利研究報告
+            </p>
+        </div>
+    </footer>
+
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+        // 滾動動畫 - Intersection Observer
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-animate').forEach(el => {
+            observer.observe(el);
+        });
+
+        // 側邊導航高亮
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        function highlightNav() {
+            let current = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', highlightNav);
+        highlightNav(); // 初始化
+    </script>
+
+</body>
+</html>
