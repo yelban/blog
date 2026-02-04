@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>一個讓我變聰明的學習方法（但有個秘密要注意）</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#4F46E5',
+            secondary: '#818CF8',
+            cta: '#22C55E',
+            surface: '#EEF2FF',
+            ink: '#312E81',
+            muted: '#6366F1',
+          },
+          fontFamily: {
+            heading: ['Baloo 2', 'Noto Sans TC', 'sans-serif'],
+            body: ['Noto Sans TC', 'sans-serif'],
+          },
+          borderRadius: {
+            'clay': '20px',
+          },
+          boxShadow: {
+            'clay': '8px 8px 16px rgba(99, 102, 241, 0.15), -4px -4px 12px rgba(255, 255, 255, 0.8)',
+            'clay-sm': '4px 4px 8px rgba(99, 102, 241, 0.1), -2px -2px 6px rgba(255, 255, 255, 0.7)',
+            'clay-inset': 'inset 2px 2px 4px rgba(99, 102, 241, 0.1), inset -2px -2px 4px rgba(255, 255, 255, 0.7)',
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 50%, #C7D2FE 100%);
+      min-height: 100vh;
+    }
+    h1, h2, h3 { font-family: 'Baloo 2', 'Noto Sans TC', sans-serif; }
+
+    /* Claymorphism card */
+    .clay-card {
+      background: rgba(255, 255, 255, 0.85);
+      border: 3px solid rgba(99, 102, 241, 0.2);
+      border-radius: 20px;
+      box-shadow: 8px 8px 16px rgba(99, 102, 241, 0.15), -4px -4px 12px rgba(255, 255, 255, 0.8);
+    }
+
+    /* Image container */
+    .img-clay {
+      border: 3px solid rgba(99, 102, 241, 0.25);
+      border-radius: 16px;
+      box-shadow: 4px 4px 12px rgba(99, 102, 241, 0.12);
+      overflow: hidden;
+    }
+
+    /* Blockquote */
+    .clay-quote {
+      background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+      border: 3px solid #F59E0B;
+      border-radius: 16px;
+      box-shadow: 4px 4px 12px rgba(245, 158, 11, 0.2);
+    }
+
+    /* List items */
+    .clay-list li {
+      position: relative;
+      padding-left: 1.75rem;
+    }
+    .clay-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.6em;
+      width: 10px;
+      height: 10px;
+      background: #22C55E;
+      border-radius: 50%;
+      box-shadow: 2px 2px 4px rgba(34, 197, 94, 0.3);
+    }
+
+    /* Numbered list */
+    .clay-ol {
+      counter-reset: clay-counter;
+    }
+    .clay-ol li {
+      counter-increment: clay-counter;
+      position: relative;
+      padding-left: 2.5rem;
+    }
+    .clay-ol li::before {
+      content: counter(clay-counter);
+      position: absolute;
+      left: 0;
+      top: 0.1em;
+      width: 1.75rem;
+      height: 1.75rem;
+      background: linear-gradient(135deg, #4F46E5, #818CF8);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.875rem;
+      box-shadow: 2px 2px 6px rgba(79, 70, 229, 0.3);
+    }
+
+    /* Section divider */
+    .clay-divider {
+      height: 4px;
+      background: linear-gradient(90deg, transparent, #818CF8, transparent);
+      border-radius: 2px;
+      margin: 2.5rem 0;
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body class="text-ink">
+  <!-- Main Container -->
+  <main class="max-w-3xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+
+    <!-- Article Card -->
+    <article class="clay-card p-6 sm:p-10">
+
+      <!-- Title -->
+      <header class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-bold text-primary leading-tight mb-6">
+          一個讓我變聰明的學習方法<br>
+          <span class="text-secondary">（但有個秘密要注意）</span>
+        </h1>
+
+        <!-- Cover Image -->
+        <div class="img-clay">
+          <img
+            src="cover-image/learning-method/cover.png"
+            alt="學習方法封面圖：小孩站在岔路口，選擇系統練習或好奇心探索"
+            class="w-full h-auto"
+            loading="eager"
+          >
+        </div>
+      </header>
+
+      <!-- Intro -->
+      <section class="text-lg leading-relaxed space-y-4 mb-8">
+        <p>前幾天我看了一個直播，有個爸爸分享他怎麼幫女兒學程式設計。</p>
+        <p>他女兒考檢定，考了好幾次都沒過。後來爸爸設計了一套學習方法，結果一次就過了。</p>
+        <p class="text-xl font-semibold text-primary">這方法到底有什麼厲害的？</p>
+      </section>
+
+      <!-- Section 1 -->
+      <section class="mb-10">
+        <h2 class="text-2xl sm:text-3xl font-bold text-primary mb-4">第一招：錯題不能白錯</h2>
+
+        <p class="text-lg leading-relaxed mb-4">每次寫錯的題目，爸爸都會記下來，問三個問題：</p>
+
+        <ul class="clay-list text-lg leading-loose space-y-2 mb-6">
+          <li>錯在哪？</li>
+          <li>是觀念不懂？粗心？還是題目沒看清楚？</li>
+          <li>要練什麼類型的題才能補起來？</li>
+        </ul>
+
+        <p class="text-lg leading-relaxed mb-6">找到原因後，用 AI 工具出類似的新題目。不是重寫原本那題，是專門練你不會的地方。</p>
+
+        <h3 class="text-xl font-bold text-secondary mb-3">為什麼這招有用？</h3>
+
+        <p class="text-lg leading-relaxed mb-4">有個心理學家叫 Anders Ericsson，他花了三十年研究「人怎麼變成高手」。</p>
+
+        <p class="text-lg leading-relaxed mb-4">他發現一個秘密：<strong class="text-primary">高手不是練最多的人，是專門練自己不會的地方的人。</strong></p>
+
+        <p class="text-lg leading-relaxed mb-4">一般人練習，喜歡做自己會的題目，因為有成就感。但這樣進步很慢。</p>
+
+        <p class="text-lg leading-relaxed mb-6">高手相反。專挑不會的練，雖然痛苦，但進步快。</p>
+
+        <!-- Image 1 -->
+        <figure class="img-clay mb-2">
+          <img
+            src="illustrations/learning-method/01-comparison-deliberate-practice.png"
+            alt="一般人 vs 高手的練習方式對比：一般人在舒適圈內練習，高手跳出舒適圈"
+            class="w-full h-auto"
+            loading="lazy"
+          >
+        </figure>
+        <figcaption class="text-center text-muted text-sm mb-6">一般人 vs 高手的練習方式</figcaption>
+      </section>
+
+      <!-- Section 2 -->
+      <section class="mb-10">
+        <h2 class="text-2xl sm:text-3xl font-bold text-primary mb-4">第二招：分清楚「真會」和「假會」</h2>
+
+        <p class="text-lg leading-relaxed mb-4">寫題目的時候，每一題要標記：「確定」還是「不確定」。</p>
+
+        <p class="text-lg leading-relaxed mb-4">為什麼？</p>
+
+        <p class="text-lg leading-relaxed mb-4">答對一題，有兩種可能：</p>
+
+        <ol class="clay-ol text-lg leading-loose space-y-2 mb-6">
+          <li>真的會</li>
+          <li>矇對的</li>
+        </ol>
+
+        <p class="text-lg leading-relaxed mb-4">傳統考試只看答案。矇對了，老師也給你打勾。</p>
+
+        <p class="text-lg leading-relaxed mb-6">但矇對的題目，換個方式問，你就不會了。</p>
+
+        <h3 class="text-xl font-bold text-secondary mb-3">這招背後的道理</h3>
+
+        <p class="text-lg leading-relaxed mb-4">有個拿過諾貝爾獎的心理學家叫 Daniel Kahneman。他研究發現：人有個毛病——<strong class="text-primary">以為自己懂了，其實沒懂。</strong></p>
+
+        <p class="text-lg leading-relaxed mb-4">每個人都這樣，包括大人。</p>
+
+        <p class="text-lg leading-relaxed mb-4">標記「確定/不確定」，就是在練習誠實問自己：「這題我真的懂嗎？還是運氣好？」</p>
+
+        <p class="text-lg leading-relaxed mb-6">能這樣問自己的人，進步比別人快。</p>
+
+        <!-- Image 2 -->
+        <figure class="img-clay mb-2">
+          <img
+            src="illustrations/learning-method/02-comparison-true-vs-fake-knowledge.png"
+            alt="傳統方式 vs 新方式：傳統只看對錯，新方式標記確定或不確定"
+            class="w-full h-auto"
+            loading="lazy"
+          >
+        </figure>
+        <figcaption class="text-center text-muted text-sm mb-6">分辨真會和假會</figcaption>
+      </section>
+
+      <!-- Key Quote -->
+      <section class="mb-10">
+        <h2 class="text-2xl sm:text-3xl font-bold text-primary mb-4">最重要的一句話</h2>
+
+        <blockquote class="clay-quote p-6 mb-6">
+          <p class="text-xl sm:text-2xl font-semibold text-amber-800 leading-relaxed">
+            知道自己會什麼很重要，但知道自己「不會什麼」更重要。
+          </p>
+        </blockquote>
+
+        <p class="text-lg leading-relaxed mb-4">聽起來簡單。做起來難。</p>
+
+        <p class="text-lg leading-relaxed mb-4">很多人考完試只看分數。90 分，開心！</p>
+
+        <p class="text-lg leading-relaxed mb-4">但那 10 分錯在哪？為什麼錯？下次怎麼避免？</p>
+
+        <p class="text-lg leading-relaxed font-semibold text-primary">願意問這些問題的人，才會真正進步。</p>
+      </section>
+
+      <div class="clay-divider"></div>
+
+      <!-- Secret Section -->
+      <section class="mb-10">
+        <h2 class="text-2xl sm:text-3xl font-bold text-primary mb-4">但是，有個秘密要注意</h2>
+
+        <p class="text-lg leading-relaxed mb-4">這套方法很厲害，但不是萬靈丹。</p>
+
+        <p class="text-lg leading-relaxed mb-4">有個教育學家叫 Yong Zhao，他專門研究「看起來有效的方法，為什麼有時候反而有害」。</p>
+
+        <p class="text-lg leading-relaxed mb-4">他提醒一件事：</p>
+
+        <p class="text-xl leading-relaxed font-bold text-primary mb-6 p-4 bg-red-50 border-l-4 border-red-400 rounded-r-lg">
+          如果學習變成「一直被修正」，你可能會失去最重要的東西——好奇心。
+        </p>
+
+        <p class="text-lg leading-relaxed mb-4">想像一下：</p>
+
+        <p class="text-lg leading-relaxed mb-4">每天有個系統告訴你：這裡不會、那裡不會、這個要補、那個要練。</p>
+
+        <p class="text-lg leading-relaxed mb-6">久了，你可能會覺得：「學習就是在填補我的缺點。」</p>
+
+        <p class="text-lg leading-relaxed mb-4">但學習不只是這樣。</p>
+
+        <p class="text-lg leading-relaxed mb-4">學習也可以是：</p>
+
+        <ul class="clay-list text-lg leading-loose space-y-2 mb-6">
+          <li>因為好奇，去查一個問題</li>
+          <li>因為有趣，多讀一本書</li>
+          <li>因為想做出一個東西，自己去摸索</li>
+        </ul>
+
+        <p class="text-lg leading-relaxed font-semibold text-cta">這些「沒有人逼你」的學習，才是最珍貴的。</p>
+      </section>
+
+      <div class="clay-divider"></div>
+
+      <!-- Balance Section -->
+      <section class="mb-10">
+        <h2 class="text-2xl sm:text-3xl font-bold text-primary mb-4">怎麼兩種都要？</h2>
+
+        <div class="grid sm:grid-cols-2 gap-4 mb-6">
+          <div class="bg-indigo-50 border-2 border-indigo-200 rounded-xl p-5">
+            <p class="font-bold text-primary mb-2">考試前、想補強弱點</p>
+            <p class="text-lg">→ 用系統練習</p>
+          </div>
+          <div class="bg-green-50 border-2 border-green-200 rounded-xl p-5">
+            <p class="font-bold text-cta mb-2">平常、假日、有好奇心的時候</p>
+            <p class="text-lg">→ 自由探索</p>
+          </div>
+        </div>
+
+        <p class="text-lg leading-relaxed mb-4">不要只會被系統餵題目。也不要完全放任自己，從不檢討錯誤。</p>
+
+        <p class="text-xl leading-relaxed font-bold text-primary mb-6">兩種都要有。</p>
+
+        <!-- Image 3 -->
+        <figure class="img-clay mb-2">
+          <img
+            src="illustrations/learning-method/03-comparison-balance.png"
+            alt="系統練習與好奇心探索的平衡：天平兩端分別是有紀律的練習和自由探索"
+            class="w-full h-auto"
+            loading="lazy"
+          >
+        </figure>
+        <figcaption class="text-center text-muted text-sm mb-6">找到平衡點</figcaption>
+      </section>
+
+      <div class="clay-divider"></div>
+
+      <!-- Action Section -->
+      <section class="mb-10">
+        <h2 class="text-2xl sm:text-3xl font-bold text-primary mb-6">你可以怎麼開始？</h2>
+
+        <div class="grid gap-6">
+          <!-- System Side -->
+          <div class="bg-indigo-50 border-3 border-indigo-200 rounded-xl p-6">
+            <h3 class="text-xl font-bold text-primary mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm">系</span>
+              系統那一面
+            </h3>
+            <ol class="clay-ol text-lg leading-loose space-y-3">
+              <li>準備一本「錯題筆記本」</li>
+              <li>每次考完試，把錯的題目抄下來</li>
+              <li>寫下「錯在哪裡」和「正確的做法」</li>
+              <li>標記：這題我是「真的不會」還是「粗心」？</li>
+              <li>一週後，重新做一次</li>
+            </ol>
+          </div>
+
+          <!-- Curiosity Side -->
+          <div class="bg-green-50 border-3 border-green-200 rounded-xl p-6">
+            <h3 class="text-xl font-bold text-cta mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 bg-cta text-white rounded-full flex items-center justify-center text-sm">奇</span>
+              好奇心那一面
+            </h3>
+            <ol class="clay-ol text-lg leading-loose space-y-3">
+              <li>每週找一個「沒人叫你學，但你想知道」的問題</li>
+              <li>自己去查、去讀、去試</li>
+              <li>不用寫報告，不用考試，純粹因為想知道</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <div class="clay-divider"></div>
+
+      <!-- Conclusion -->
+      <section class="text-center">
+        <h2 class="text-2xl sm:text-3xl font-bold text-primary mb-6">結語</h2>
+
+        <p class="text-lg leading-relaxed mb-4">願意用系統練習的人，可能只有 5%。</p>
+
+        <p class="text-lg leading-relaxed mb-6">在這 5% 裡面，能同時保持好奇心的人，更少。</p>
+
+        <p class="text-xl font-bold text-primary mb-6">你想當哪種人？</p>
+
+        <p class="text-lg leading-relaxed text-muted">被系統推著走？還是自己決定什麼時候用系統、什麼時候自由探索？</p>
+      </section>
+
+    </article>
+
+    <!-- Footer -->
+    <footer class="text-center text-muted text-sm mt-8 pb-8">
+      <p>Made with care for young learners</p>
+    </footer>
+
+  </main>
+</body>
+</html>
