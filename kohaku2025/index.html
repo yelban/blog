@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第76回 NHK紅白歌合戰 2025</title>
+
+  <!-- video.js CSS -->
+  <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #1a1a2e;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, #ff4757, #ffffff, #ff4757);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header p {
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    .player-container {
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    /* Playlist buttons */
+    .playlist {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+
+    .playlist-btn {
+      padding: 12px 24px;
+      border: 2px solid #333;
+      background: #16213e;
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+
+    .playlist-btn:hover {
+      border-color: #ff4757;
+      background: #1a1a2e;
+    }
+
+    .playlist-btn.active {
+      border-color: #ff4757;
+      background: linear-gradient(135deg, #ff4757 0%, #c0392b 100%);
+    }
+
+    .playlist-btn.white-team {
+      border-color: #555;
+    }
+
+    .playlist-btn.white-team.active {
+      border-color: #fff;
+      background: linear-gradient(135deg, #ffffff 0%, #cccccc 100%);
+      color: #1a1a2e;
+    }
+
+    /* Video.js custom dark theme */
+    .video-js {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .video-js .vjs-control-bar {
+      background: rgba(26, 26, 46, 0.9);
+    }
+
+    .video-js .vjs-play-progress,
+    .video-js .vjs-volume-level {
+      background: #ff4757;
+    }
+
+    .video-js .vjs-slider {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .video-js.vjs-big-play-centered .vjs-big-play-button {
+      background: rgba(255, 71, 87, 0.9);
+      border: none;
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      line-height: 80px;
+      margin-left: -40px;
+      margin-top: -40px;
+    }
+
+    .video-js .vjs-big-play-button:hover {
+      background: rgba(255, 71, 87, 1);
+    }
+
+    .video-js:hover .vjs-big-play-button {
+      background: rgba(255, 71, 87, 1);
+    }
+
+    /* Now playing info */
+    .now-playing {
+      margin-top: 15px;
+      padding: 15px;
+      background: #16213e;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .now-playing-title {
+      font-size: 1.1rem;
+    }
+
+    .now-playing-status {
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    .auto-play-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .auto-play-toggle input {
+      width: 18px;
+      height: 18px;
+      accent-color: #ff4757;
+    }
+
+    /* Instructions */
+    .instructions {
+      margin-top: 30px;
+      padding: 20px;
+      background: #16213e;
+      border-radius: 8px;
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    .instructions h3 {
+      color: #ff4757;
+      margin-bottom: 10px;
+    }
+
+    .instructions code {
+      background: #0f0f23;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+
+    .instructions ol {
+      padding-left: 20px;
+      line-height: 1.8;
+    }
+
+    /* Subtitle Overlay - 必須在 .video-js 內部以支援全螢幕 */
+    .video-js .subtitle-overlay {
+      position: absolute;
+      bottom: 50px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      pointer-events: none;
+      z-index: 100;
+      padding: 0 20px;
+    }
+
+    .video-js .subtitle-overlay .subtitle-text {
+      display: inline-block;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 24px;
+      color: #fff;
+      line-height: 1.6;
+      font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+      max-width: 90%;
+    }
+
+    .video-js .subtitle-overlay .ja-line {
+      display: block;
+      font-size: 22px;
+      margin-bottom: -5px;
+    }
+
+    .video-js .subtitle-overlay .zh-line {
+      display: block;
+      font-size: 20px;
+      color: #ffd700;
+    }
+
+    /* Ruby (Furigana) styles */
+    .video-js .subtitle-overlay ruby {
+      ruby-align: center;
+    }
+
+    .video-js .subtitle-overlay rt {
+      font-size: 0.6em;
+      color: #aea;
+    }
+
+    /* 全螢幕模式字幕調整 */
+    .video-js.vjs-fullscreen .subtitle-overlay {
+      bottom: 80px;
+    }
+
+    .video-js.vjs-fullscreen .subtitle-overlay .subtitle-text {
+      font-size: 32px;
+    }
+
+    .video-js.vjs-fullscreen .subtitle-overlay .ja-line {
+      font-size: 30px;
+    }
+
+    .video-js.vjs-fullscreen .subtitle-overlay .zh-line {
+      font-size: 26px;
+    }
+
+    /* Subtitle selector */
+    .subtitle-select {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .subtitle-select label {
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    .subtitle-select select {
+      padding: 6px 12px;
+      border: 1px solid #333;
+      border-radius: 6px;
+      background: #0f0f23;
+      color: #fff;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .subtitle-select select:focus {
+      outline: none;
+      border-color: #ff4757;
+    }
+
+    /* Responsive - 平板 */
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 1.5rem;
+      }
+
+      .playlist-btn {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+      }
+
+      .video-js .subtitle-overlay {
+        bottom: 20px;
+      }
+
+      .video-js .subtitle-overlay .subtitle-text {
+        font-size: 16px;
+        padding: 6px 12px;
+      }
+
+      .video-js .subtitle-overlay .ja-line {
+        font-size: 14px;
+        margin-bottom: -3px;
+      }
+
+      .video-js .subtitle-overlay .zh-line {
+        font-size: 13px;
+      }
+
+      .video-js .subtitle-overlay rt {
+        font-size: 0.5em;
+      }
+
+      /* 平板全螢幕 */
+      .video-js.vjs-fullscreen .subtitle-overlay .subtitle-text {
+        font-size: 20px;
+      }
+
+      .video-js.vjs-fullscreen .subtitle-overlay .ja-line {
+        font-size: 18px;
+      }
+
+      .video-js.vjs-fullscreen .subtitle-overlay .zh-line {
+        font-size: 16px;
+      }
+    }
+
+    /* Responsive - 手機 */
+    @media (max-width: 480px) {
+      .video-js .subtitle-overlay {
+        bottom: 15px;
+        padding: 0 8px;
+      }
+
+      .video-js .subtitle-overlay .subtitle-text {
+        font-size: 12px;
+        padding: 4px 8px;
+        max-width: 95%;
+      }
+
+      .video-js .subtitle-overlay .ja-line {
+        font-size: 11px;
+        margin-bottom: -2px;
+      }
+
+      .video-js .subtitle-overlay .zh-line {
+        font-size: 10px;
+      }
+
+      .video-js .subtitle-overlay rt {
+        font-size: 0.45em;
+      }
+
+      /* 手機全螢幕（橫向） */
+      .video-js.vjs-fullscreen .subtitle-overlay {
+        bottom: 35px;
+      }
+
+      .video-js.vjs-fullscreen .subtitle-overlay .subtitle-text {
+        font-size: 12px;
+        padding: 4px 8px;
+      }
+
+      .video-js.vjs-fullscreen .subtitle-overlay .ja-line {
+        font-size: 11px;
+      }
+
+      .video-js.vjs-fullscreen .subtitle-overlay .zh-line {
+        font-size: 10px;
+      }
+    }
+
+    /* 手機橫向全螢幕 - 更精確偵測 */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .video-js.vjs-fullscreen .subtitle-overlay {
+        bottom: 35px;
+      }
+
+      .video-js.vjs-fullscreen .subtitle-overlay .subtitle-text {
+        font-size: 16px;
+        padding: 4px 8px;
+      }
+
+      .video-js.vjs-fullscreen .subtitle-overlay .ja-line {
+        font-size: 15px;
+        margin-bottom: -2px;
+      }
+
+      .video-js.vjs-fullscreen .subtitle-overlay .zh-line {
+        font-size: 14px;
+      }
+
+      .video-js.vjs-fullscreen .subtitle-overlay rt {
+        font-size: 0.45em;
+      }
+    }
+
+    /* 手機直立全螢幕特殊處理 */
+    @media (max-width: 480px) and (orientation: portrait) {
+      .video-js.vjs-fullscreen .subtitle-overlay {
+        bottom: 60px;
+      }
+
+      .video-js.vjs-fullscreen .subtitle-overlay .subtitle-text {
+        font-size: 15px;
+      }
+
+      .video-js.vjs-fullscreen .subtitle-overlay .ja-line {
+        font-size: 14px;
+      }
+
+      .video-js.vjs-fullscreen .subtitle-overlay .zh-line {
+        font-size: 13px;
+      }
+    }
+
+    /* Auth Overlay */
+    .auth-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #1a1a2e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .auth-overlay.hidden {
+      display: none;
+    }
+
+    .auth-box {
+      background: #16213e;
+      padding: 40px;
+      border-radius: 16px;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .auth-box h2 {
+      margin-bottom: 30px;
+      font-size: 1.5rem;
+      background: linear-gradient(90deg, #ff4757, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .auth-box input {
+      width: 100%;
+      padding: 14px 18px;
+      border: 2px solid #333;
+      border-radius: 8px;
+      background: #0f0f23;
+      color: #fff;
+      font-size: 1rem;
+      margin-bottom: 15px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .auth-box input:focus {
+      border-color: #ff4757;
+    }
+
+    .auth-box button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #ff4757 0%, #c0392b 100%);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .auth-box button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(255, 71, 87, 0.4);
+    }
+
+    .auth-error {
+      color: #ff4757;
+      margin-top: 15px;
+      font-size: 0.9rem;
+      min-height: 1.2em;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 密碼驗證遮罩 -->
+  <div id="authOverlay" class="auth-overlay">
+    <div class="auth-box">
+      <h2>請輸入通關密碼</h2>
+      <input type="password" id="passwordInput" placeholder="密碼" autocomplete="off">
+      <button id="submitPassword">進入</button>
+      <p id="authError" class="auth-error"></p>
+    </div>
+  </div>
+
+  <div class="header">
+    <h1>第76回 NHK紅白歌合戰</h1>
+    <p>2025年12月31日</p>
+  </div>
+
+  <div class="player-container">
+    <!-- 格式選擇按鈕 -->
+    <div class="playlist">
+      <button class="playlist-btn format-btn active" data-format="hevc">完整版 (4K)</button>
+      <button class="playlist-btn format-btn white-team" data-format="h264">完整版 (1080p)</button>
+    </div>
+
+    <!-- Video Player -->
+    <video
+      id="player"
+      class="video-js vjs-big-play-centered"
+      controls
+      preload="auto"
+      playsinline
+    >
+      <p class="vjs-no-js">
+        請啟用 JavaScript 並使用支援 HTML5 影片的瀏覽器
+      </p>
+    </video>
+
+    <!-- Now Playing Info -->
+    <div class="now-playing">
+      <div>
+        <div class="now-playing-title" id="nowPlayingTitle">紅白歌合戰 2025</div>
+        <div class="now-playing-status" id="nowPlayingStatus">準備播放</div>
+      </div>
+      <div class="subtitle-select">
+        <label>字幕</label>
+        <select id="subtitleSelect">
+          <option value="off">關閉</option>
+          <option value="zh">繁體中文</option>
+          <option value="ja">日本語（假名）</option>
+          <option value="bilingual" selected>雙語對照</option>
+        </select>
+      </div>
+      <label class="auto-play-toggle">
+        <input type="checkbox" id="autoPlayNext" checked>
+        <span>自動播放下一部</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- video.js JS -->
+  <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+
+  <script>
+    // ============================================
+    // 密碼設定
+    // ============================================
+    // 產生 SHA-256 雜湊的方法：在瀏覽器 Console 執行以下指令
+    // crypto.subtle.digest('SHA-256', new TextEncoder().encode('你的密碼'))
+    //   .then(h => console.log(Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2,'0')).join('')))
+    //
+    // 範例密碼 "test" 的雜湊值（請替換為你自己的密碼雜湊）：
+    const PASSWORD_HASH = '57ac3373f11841f65fa4e2a7484135832dbbd9fc24fc6c8325b712ef8ca07505';
+    const STORAGE_KEY = 'kohaku_auth';
+    // ============================================
+
+    // ============================================
+    // 影片設定 - 請在此填入你的 pCloud 直接連結
+    // ============================================
+    const VIDEOS = [
+      {
+        url_hevc: 'https://filedn.com/lpKhCAdafRpuyxFglX13S94/Video/kohaku2025/kohaku_4k_final.mp4',  // 本地測試 - HEVC 4K (hvc1 tag + 音訊修復)
+        url_h264: 'https://filedn.com/lpKhCAdafRpuyxFglX13S94/Video/kohaku2025/kohaku_1080p.mp4',  // H.264 1080p (99% 瀏覽器)
+        title_hevc: '紅白歌合戰 2025 (4K HEVC)',
+        title_h264: '紅白歌合戰 2025 (1080p)',
+        subtitles: {
+          zh: './subtitles/vtt/kohaku_v9_fixed_v3-zh.vtt',
+          ja: './subtitles/vtt/kohaku_v9_fixed_v3-ja.vtt',
+          bilingual: './subtitles/vtt/kohaku_v9_fixed_v3-bilingual.vtt'
+        }
+      }
+    ];
+    // ============================================
+
+    // HEVC 支援檢測（只有 Safari 完整支援 Main 10 HDR）
+    function canPlayHEVC() {
+      const video = document.createElement('video');
+      // hvc1 codec tag - 瀏覽器相容格式
+      const canPlay = video.canPlayType('video/mp4; codecs="hvc1.2.4.L153.B0"') !== '' ||
+                      video.canPlayType('video/mp4; codecs="hvc1.1.6.L153.B0"') !== '';
+      console.log('[Player] HEVC 支援檢測:', canPlay);
+      return canPlay;
+    }
+
+    // 取得適合的影片來源
+    function getVideoSource(videoConfig) {
+      const useHEVC = canPlayHEVC();
+      return {
+        url: useHEVC ? videoConfig.url_hevc : videoConfig.url_h264,
+        title: useHEVC ? videoConfig.title_hevc : videoConfig.title_h264,
+        isHEVC: useHEVC
+      };
+    }
+
+    let currentVideoIsHEVC = false;  // 追蹤當前使用的格式
+    // ============================================
+
+    let currentIndex = 0;
+    let player;
+    let currentSubtitleMode = 'bilingual';  // 預設雙語對照
+    let subtitleTracks = {};  // 儲存載入的字幕軌道
+    let subtitleOverlay;
+    let subtitleText;
+
+    // Initialize video.js player
+    document.addEventListener('DOMContentLoaded', function() {
+      player = videojs('player', {
+        fluid: true,
+        responsive: true,
+        playbackRates: [0.5, 1, 1.25, 1.5, 2],
+        controlBar: {
+          children: [
+            'playToggle',
+            'volumePanel',
+            'currentTimeDisplay',
+            'timeDivider',
+            'durationDisplay',
+            'progressControl',
+            'playbackRateMenuButton',
+            'fullscreenToggle'
+          ]
+        }
+      });
+
+      // 在 video.js 容器內建立字幕 overlay（支援全螢幕）
+      player.ready(function() {
+        createSubtitleOverlay();
+        loadSubtitlePreference();
+
+        // 字幕時間更新監聽
+        const videoEl = player.el().querySelector('video');
+        videoEl.addEventListener('timeupdate', updateSubtitleDisplay);
+
+        // Load first video (must be after overlay is created)
+        loadVideo(0);
+      });
+
+    // 建立字幕 overlay（在 video.js 容器內）
+    function createSubtitleOverlay() {
+      subtitleOverlay = document.createElement('div');
+      subtitleOverlay.id = 'subtitleOverlay';
+      subtitleOverlay.className = 'subtitle-overlay';
+
+      subtitleText = document.createElement('span');
+      subtitleText.className = 'subtitle-text';
+
+      subtitleOverlay.appendChild(subtitleText);
+      player.el().appendChild(subtitleOverlay);
+    }
+
+      // Handle video end - auto play next
+      player.on('ended', function() {
+        const autoPlay = document.getElementById('autoPlayNext').checked;
+        if (autoPlay && currentIndex < VIDEOS.length - 1) {
+          loadVideo(currentIndex + 1);
+          player.play();
+        } else {
+          updateStatus('播放結束');
+        }
+      });
+
+      // Handle errors - 嘗試切換到 H.264 備用
+      player.on('error', function() {
+        const error = player.error();
+        const errorCodes = {
+          1: 'MEDIA_ERR_ABORTED (用戶中止)',
+          2: 'MEDIA_ERR_NETWORK (網路錯誤)',
+          3: 'MEDIA_ERR_DECODE (解碼錯誤)',
+          4: 'MEDIA_ERR_SRC_NOT_SUPPORTED (格式不支援)'
+        };
+        console.error('[Player] 影片錯誤:', errorCodes[error?.code] || error?.code, error?.message);
+        console.error('[Player] 當前格式:', currentVideoIsHEVC ? 'HEVC 4K' : 'H.264 1080p');
+
+        // 如果是 HEVC 播放失敗，嘗試切換到 H.264
+        if (currentVideoIsHEVC) {
+          fallbackToH264();
+        } else {
+          updateStatus('播放錯誤 - 請檢查影片連結是否正確');
+        }
+      });
+
+      // Update status on play/pause
+      player.on('play', function() {
+        updateStatus('播放中');
+      });
+
+      player.on('pause', function() {
+        updateStatus('已暫停');
+      });
+
+      player.on('waiting', function() {
+        updateStatus('緩衝中...');
+      });
+
+      player.on('canplay', function() {
+        if (!player.paused()) {
+          updateStatus('播放中');
+        }
+      });
+    });
+
+    // Load video by index
+    function loadVideo(index) {
+      if (index < 0 || index >= VIDEOS.length) return;
+
+      currentIndex = index;
+      const videoConfig = VIDEOS[index];
+      const source = getVideoSource(videoConfig);
+
+      currentVideoIsHEVC = source.isHEVC;
+
+      player.src({
+        src: source.url,
+        type: 'video/mp4'
+      });
+
+      // Update UI
+      document.getElementById('nowPlayingTitle').textContent = source.title;
+      updateStatus(source.isHEVC ? '載入中 (4K HEVC)...' : '載入中 (1080p)...');
+      updatePlaylistButtons();
+
+      // Load subtitles
+      loadSubtitles(videoConfig.subtitles);
+
+      // 顯示格式資訊
+      console.log(`[Player] 使用 ${source.isHEVC ? 'HEVC 4K' : 'H.264 1080p'} 格式`);
+    }
+
+    // HEVC 播放失敗時切換到 H.264
+    function fallbackToH264() {
+      if (!currentVideoIsHEVC) return;  // 已經是 H.264
+
+      const videoConfig = VIDEOS[currentIndex];
+      const currentTime = player.currentTime() || 0;  // 保存播放進度
+      const wasPlaying = !player.paused();
+
+      console.warn('[Player] HEVC 播放失敗，切換到 H.264 1080p');
+      console.log('[Player] 保存進度:', currentTime, '秒，播放狀態:', wasPlaying);
+
+      currentVideoIsHEVC = false;
+
+      player.src({
+        src: videoConfig.url_h264,
+        type: 'video/mp4'
+      });
+
+      document.getElementById('nowPlayingTitle').textContent = videoConfig.title_h264;
+      updateStatus('切換到 1080p...');
+
+      // 同步更新格式按鈕狀態
+      document.querySelectorAll('.format-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.format === 'h264');
+      });
+
+      // 載入完成後恢復進度並繼續播放
+      player.one('loadedmetadata', function() {
+        if (currentTime > 0) {
+          player.currentTime(currentTime);
+          console.log('[Player] 恢復進度到:', currentTime, '秒');
+        }
+        if (wasPlaying) {
+          player.play().catch(e => console.warn('[Player] 自動播放失敗:', e));
+        }
+      });
+    }
+
+    // ============================================
+    // 字幕系統
+    // ============================================
+
+    // 載入字幕
+    async function loadSubtitles(subtitlePaths) {
+      // 清除舊字幕
+      subtitleTracks = {};
+      clearSubtitleDisplay();
+
+      if (!subtitlePaths) return;
+
+      // 載入所有語言的字幕
+      for (const [lang, path] of Object.entries(subtitlePaths)) {
+        try {
+          const response = await fetch(path);
+          if (response.ok) {
+            const vttText = await response.text();
+            subtitleTracks[lang] = parseVTT(vttText);
+            console.log(`載入字幕 ${lang}: ${subtitleTracks[lang].length} 條`);
+          }
+        } catch (e) {
+          console.warn(`無法載入字幕 ${lang}:`, e);
+        }
+      }
+
+    }
+
+    // 解析 VTT 檔案
+    function parseVTT(vttText) {
+      const cues = [];
+      const lines = vttText.split('\n');
+      let i = 0;
+
+      // 跳過 WEBVTT 標頭
+      while (i < lines.length && !lines[i].includes('-->')) {
+        i++;
+      }
+
+      while (i < lines.length) {
+        const line = lines[i].trim();
+
+        // 尋找時間軸行
+        if (line.includes('-->')) {
+          const timeParts = line.split('-->');
+          const start = parseVTTTime(timeParts[0].trim());
+          const end = parseVTTTime(timeParts[1].trim().split(' ')[0]);
+
+          // 收集字幕文字（可能多行）
+          i++;
+          let text = '';
+          while (i < lines.length && lines[i].trim() !== '') {
+            text += (text ? '\n' : '') + lines[i];
+            i++;
+          }
+
+          if (text) {
+            cues.push({ start, end, text });
+          }
+        }
+        i++;
+      }
+
+      return cues;
+    }
+
+    // 解析 VTT 時間格式 (HH:MM:SS.mmm 或 MM:SS.mmm)
+    function parseVTTTime(timeStr) {
+      const parts = timeStr.split(':');
+      let hours = 0, mins = 0, secs = 0;
+
+      if (parts.length === 3) {
+        hours = parseInt(parts[0]);
+        mins = parseInt(parts[1]);
+        secs = parseFloat(parts[2]);
+      } else if (parts.length === 2) {
+        mins = parseInt(parts[0]);
+        secs = parseFloat(parts[1]);
+      }
+
+      return hours * 3600 + mins * 60 + secs;
+    }
+
+    // 更新字幕顯示
+    function updateSubtitleDisplay() {
+      if (!subtitleOverlay || !subtitleText) return;
+
+      if (currentSubtitleMode === 'off') {
+        clearSubtitleDisplay();
+        return;
+      }
+
+      const track = subtitleTracks[currentSubtitleMode];
+      if (!track) return;
+
+      const currentTime = player.currentTime();
+      const activeCue = track.find(cue =>
+        currentTime >= cue.start && currentTime <= cue.end
+      );
+
+      if (activeCue) {
+        subtitleText.innerHTML = activeCue.text;
+        subtitleOverlay.style.display = 'block';
+      } else {
+        clearSubtitleDisplay();
+      }
+    }
+
+    // 清除字幕顯示
+    function clearSubtitleDisplay() {
+      if (!subtitleOverlay || !subtitleText) return;
+      subtitleText.innerHTML = '';
+      subtitleOverlay.style.display = 'none';
+    }
+
+    // 字幕選擇器事件
+    document.getElementById('subtitleSelect').addEventListener('change', function() {
+      currentSubtitleMode = this.value;
+      localStorage.setItem('kohaku_subtitle', currentSubtitleMode);
+      updateSubtitleDisplay();
+    });
+
+    // 載入儲存的字幕偏好
+    function loadSubtitlePreference() {
+      const saved = localStorage.getItem('kohaku_subtitle');
+      if (saved) {
+        currentSubtitleMode = saved;
+        document.getElementById('subtitleSelect').value = saved;
+      }
+    }
+
+    // Update playlist button states
+    function updatePlaylistButtons() {
+      document.querySelectorAll('.playlist-btn').forEach((btn, idx) => {
+        btn.classList.toggle('active', idx === currentIndex);
+      });
+    }
+
+    // Update status display
+    function updateStatus(status) {
+      document.getElementById('nowPlayingStatus').textContent = status;
+    }
+
+    // 格式選擇按鈕點擊處理
+    document.querySelectorAll('.format-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const format = this.dataset.format;
+        const currentTime = player.currentTime() || 0;
+        const wasPlaying = !player.paused();
+
+        // 更新按鈕狀態
+        document.querySelectorAll('.format-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+
+        const videoConfig = VIDEOS[0];
+
+        if (format === 'hevc') {
+          currentVideoIsHEVC = true;
+          player.src({ src: videoConfig.url_hevc, type: 'video/mp4' });
+          document.getElementById('nowPlayingTitle').textContent = videoConfig.title_hevc;
+        } else {
+          currentVideoIsHEVC = false;
+          player.src({ src: videoConfig.url_h264, type: 'video/mp4' });
+          document.getElementById('nowPlayingTitle').textContent = videoConfig.title_h264;
+        }
+
+        // 恢復播放進度
+        player.one('loadedmetadata', function() {
+          if (currentTime > 1) {
+            player.currentTime(currentTime);
+          }
+          if (wasPlaying) {
+            player.play().catch(e => console.warn('[Player] 自動播放失敗:', e));
+          }
+        });
+
+        console.log(`[Player] 手動切換到 ${format === 'hevc' ? '4K HEVC' : '1080p H.264'}`);
+      });
+    });
+
+    // ============================================
+    // 密碼驗證邏輯
+    // ============================================
+
+    // SHA-256 雜湊函數
+    async function sha256(message) {
+      const msgBuffer = new TextEncoder().encode(message);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // 檢查是否已驗證
+    function checkAuth() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved === PASSWORD_HASH) {
+        showPlayer();
+        return true;
+      }
+      return false;
+    }
+
+    // 顯示播放器（隱藏密碼遮罩）
+    function showPlayer() {
+      document.getElementById('authOverlay').classList.add('hidden');
+    }
+
+    // 驗證密碼
+    async function verifyPassword() {
+      const input = document.getElementById('passwordInput').value;
+      const errorEl = document.getElementById('authError');
+
+      if (!input) {
+        errorEl.textContent = '請輸入密碼';
+        return;
+      }
+
+      const hash = await sha256(input);
+
+      if (hash === PASSWORD_HASH) {
+        localStorage.setItem(STORAGE_KEY, PASSWORD_HASH);
+        showPlayer();
+      } else {
+        errorEl.textContent = '密碼錯誤，請重試';
+        document.getElementById('passwordInput').value = '';
+      }
+    }
+
+    // 綁定事件
+    document.getElementById('submitPassword').addEventListener('click', verifyPassword);
+    document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        verifyPassword();
+      }
+    });
+
+    // 頁面載入時檢查驗證狀態
+    checkAuth();
+  </script>
+</body>
+</html>
